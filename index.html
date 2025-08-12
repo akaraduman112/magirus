@@ -1,0 +1,1874 @@
+<html lang="tr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAGİRUS ÜST YAPI KULLANIM - İtfaiye</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+      min-height: 100vh;
+    }
+
+    /* Header Stili */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+      padding: 15px 20px;
+      box-shadow: 0 4px 20px rgba(139, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-left img, .logo-right img {
+      height: 60px;
+      border-radius: 12px;
+      background: white;
+      padding: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .logo-left img:hover, .logo-right img:hover {
+      transform: scale(1.05);
+    }
+
+    .title-section {
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .title-section h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 700;
+    }
+
+    .title-section h2 {
+      margin: 5px 0 0 0;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.95);
+      font-weight: 400;
+    }
+
+    /* Ana Navigasyon Container */
+    .nav-container {
+      background: white;
+      box-shadow: 0 2px 10px rgba(139, 0, 0, 0.1);
+      position: sticky;
+      top: 90px;
+      z-index: 999;
+    }
+
+    /* Ana Menü Stilleri */
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 25px;
+      background: none;
+      border: none;
+      color: #4a5568;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      outline: none;
+    }
+
+    .nav-button:hover {
+      background: linear-gradient(to bottom, rgba(196, 30, 58, 0.1), rgba(196, 30, 58, 0.05));
+      color: #c41e3a;
+    }
+
+    .nav-button.active {
+      color: #c41e3a;
+      border-bottom-color: #c41e3a;
+      background: linear-gradient(to bottom, rgba(196, 30, 58, 0.1), transparent);
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Alt Sayfa Navigasyonu */
+    .sub-nav {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 12px;
+      background: linear-gradient(to right, #fff5f5, #ffe0e0);
+      border-top: 1px solid #ffcccc;
+    }
+
+    .sub-nav.active {
+      display: flex;
+    }
+
+    .page-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .page-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+    }
+
+    .page-dot.active {
+      width: 30px;
+      border-radius: 15px;
+      background: #c41e3a;
+    }
+
+    .page-dot:hover {
+      background: #ff6b6b;
+    }
+
+    .page-nav-btn {
+      padding: 8px 16px;
+      background: white;
+      border: 1px solid #ffcccc;
+      border-radius: 8px;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .page-nav-btn:hover:not(:disabled) {
+      background: #c41e3a;
+      color: white;
+      border-color: #c41e3a;
+      transform: translateX(0);
+    }
+
+    .page-nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .page-nav-btn.prev:hover:not(:disabled) {
+      transform: translateX(-3px);
+    }
+
+    .page-nav-btn.next:hover:not(:disabled) {
+      transform: translateX(3px);
+    }
+
+    .page-indicator {
+      padding: 5px 12px;
+      background: white;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #c41e3a;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(196, 30, 58, 0.2);
+    }
+
+    /* Mobil Sayfa Navigasyonu - İçerikte */
+    .content-page-nav {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: linear-gradient(to right, #fff5f5, #ffe0e0);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(196, 30, 58, 0.1);
+    }
+
+    /* İçerik Alanı */
+    .content-wrapper {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      min-height: 500px;
+    }
+
+    @media (max-width: 768px) {
+      .content-wrapper {
+        padding: 0 10px;
+      }
+      
+      .tab-content {
+        padding: 15px;
+        border-radius: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .content-wrapper {
+        padding: 0 5px;
+      }
+      
+      .tab-content {
+        padding: 10px;
+        border-radius: 8px;
+      }
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-content img {
+      width: 100%;
+      max-width: 950px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    /* İnteraktif Elemanlar */
+    .interactive-container {
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    .interactive-wrapper {
+      position: relative;
+      width: 100%;
+      display: inline-block;
+    }
+
+    .interactive-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .marker {
+      background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      line-height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .marker:hover {
+      transform: translate(-50%, -50%) scale(1.15);
+      box-shadow: 0 6px 20px rgba(196, 30, 58, 0.6);
+    }
+
+    .marker.active {
+      background: white;
+      color: #c41e3a;
+      border: 2px solid #c41e3a;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    .line {
+      position: absolute;
+      background: linear-gradient(to right, #c41e3a, #8b0000);
+      box-shadow: 0 2px 8px rgba(196, 30, 58, 0.3);
+    }
+
+    .line-vertical {
+      width: 4px;
+    }
+
+    .line-horizontal {
+      height: 4px;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: white;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      opacity: 0;
+      visibility: hidden;
+      white-space: normal;
+      width: 280px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .tooltip.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .tooltip::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #1a202c;
+    }
+
+    .info-panel {
+      max-width: 950px;
+      margin: 30px auto 0;
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+      border: 1px solid #ffcccc;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 5px 20px rgba(196, 30, 58, 0.08);
+    }
+
+    .info-panel h3 {
+      margin: 0 0 25px 0;
+      color: #c41e3a;
+      font-size: 1.3rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ffcccc;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-number {
+      background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+
+    .info-text {
+      flex: 1;
+      text-align: left;
+      line-height: 1.7;
+      color: #4a5568;
+    }
+
+    /* Mobil Menü Butonu */
+    .mobile-menu-toggle {
+      display: none;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Responsive Tasarım */
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 15px;
+      }
+
+      .title-section h1 {
+        font-size: 1.3rem;
+      }
+
+      .title-section h2 {
+        font-size: 0.8rem;
+      }
+
+      .logo-left img, .logo-right img {
+        height: 45px;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .nav-container {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        height: 100vh;
+        background: white;
+        transition: left 0.3s ease;
+        z-index: 1001;
+        box-shadow: 5px 0 20px rgba(0,0,0,0.2);
+      }
+
+      .nav-container.mobile-open {
+        left: 0;
+      }
+
+      .main-nav {
+        flex-direction: column;
+        padding-top: 20px;
+      }
+
+      .nav-button {
+        width: 100%;
+        padding: 18px 25px;
+        justify-content: flex-start;
+        border-bottom: 1px solid #ffcccc;
+        border-left: 4px solid transparent;
+      }
+
+      .nav-button.active {
+        border-left-color: #c41e3a;
+        border-bottom-color: transparent;
+      }
+
+      /* Masaüstü alt navigasyonu mobilde gizle */
+      .sub-nav {
+        display: none !important;
+      }
+
+      /* Mobilde içerik içi navigasyonu göster */
+      .content-page-nav {
+        display: flex;
+      }
+
+      .marker {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 0.8rem;
+      }
+
+      .tooltip {
+        width: 90vw;
+        max-width: 320px;
+        left: 50% !important;
+        transform: translateX(-50%);
+      }
+
+      .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+      }
+
+      .mobile-overlay.active {
+        display: block;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title-section h1 {
+        font-size: 1.1rem;
+      }
+
+      .logo-left, .logo-right {
+        display: none;
+      }
+
+      .marker {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 0.7rem;
+      }
+
+      .content-page-nav {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .page-indicator {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    /* Swipe İndikatörü */
+    .swipe-hint {
+      display: none;
+      text-align: center;
+      color: #c41e3a;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      animation: swipeHint 2s ease infinite;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      .swipe-hint {
+        display: block;
+      }
+    }
+
+    @keyframes swipeHint {
+      0%, 100% { transform: translateX(0); opacity: 0.5; }
+      50% { transform: translateX(10px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-left">
+      <img src="img/abb.jpeg" alt="ABB">
+    </div>
+    <div class="title-section">
+      <h1>ANKARA İTFAİYESİ</h1>
+      <h2>MAGİRUS DLA (K) 42 VARİO CS</h2>
+    </div>
+    <div class="logo-right">
+      <img src="img/itf.png" alt="İTFAİYE">
+    </div>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+  </header>
+
+  <nav class="nav-container" id="navContainer">
+    <ul class="main-nav">
+      <li class="nav-item">
+        <button class="nav-button active" data-tab="giris">
+          <span class="nav-icon">🏠</span>
+          <span>Giriş</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-button" data-tab="arac-ici">
+          <span class="nav-icon">🚒</span>
+          <span>Araç İçi Fonksiyonlar</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-button" data-tab="ayak">
+          <span class="nav-icon">⚙️</span>
+          <span>Destek Ayakları</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-button" data-tab="operator" data-has-pages="true">
+          <span class="nav-icon">📊</span>
+          <span>Operatör Ekranı</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-button" data-tab="sepet" data-has-pages="true">
+          <span class="nav-icon">🏗️</span>
+          <span>Sepet Ekranı</span>
+        </button>
+      </li>
+    </ul>
+
+    <!-- Operatör Ekranı Alt Navigasyonu (Masaüstü) -->
+    <div class="sub-nav" id="operator-subnav">
+      <button class="page-nav-btn prev" data-direction="prev">
+        <span>←</span>
+        <span>Önceki</span>
+      </button>
+      <div class="page-indicator">Sayfa <span id="operator-current">3</span> / 3</div>
+      <div class="page-dots">
+        <button class="page-dot" data-page="1"></button>
+        <button class="page-dot" data-page="2"></button>
+        <button class="page-dot active" data-page="3"></button>
+      </div>
+      <button class="page-nav-btn next" data-direction="next" disabled="">
+        <span>Sonraki</span>
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- Sepet Ekranı Alt Navigasyonu (Masaüstü) -->
+    <div class="sub-nav" id="sepet-subnav">
+      <button class="page-nav-btn prev" data-direction="prev">
+        <span>←</span>
+        <span>Önceki</span>
+      </button>
+      <div class="page-indicator">Sayfa <span id="sepet-current">2</span> / 3</div>
+      <div class="page-dots">
+        <button class="page-dot" data-page="1"></button>
+        <button class="page-dot active" data-page="2"></button>
+        <button class="page-dot" data-page="3"></button>
+      </div>
+      <button class="page-nav-btn next" data-direction="next">
+        <span>Sonraki</span>
+        <span>→</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <div class="content-wrapper">
+    <!-- Giriş -->
+    <section id="giris" class="tab-content active">
+      <img src="img/giris.jpg" alt="Giriş">
+    </section>
+
+    <!-- Araç İçi -->
+    <section id="arac-ici" class="tab-content">
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/ARAC.PNG" alt="Araç İçi">
+          
+          <!-- Marker 1 - EL FRENİ (İMDAT) -->
+          <div class="marker" style="top: 102%;left: 12.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 96.5%;left: calc(13% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-1" style="left: -17.4531px; top: 642.603px;">EL FRENİ (İMDAT)</div>
+
+          <!-- Marker 2 - DİFERANSİYEL KİLİDİ -->
+          <div class="marker" style="top: 71%;left: 27.5%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 49.5%;left: calc(92.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-2">DİFERANSİYEL KİLİDİ</div>
+
+          <!-- Marker 3 - ÖN DİSK FRENLERİ -->
+          <div class="marker" style="top: 57%;left: 13.7%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 56.5%;left: calc(13.7% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-3" style="left: -9.85938px; top: 373.837px;">ÖN DİSK FRENLERİ</div>
+
+          <!-- Marker 4 - OTOMATİK VİTES -->
+          <div class="marker" style="top: 25%;left: 22.5%;" data-marker="4">4</div>
+          <div class="line line-horizontal" style="top: calc(71% - 2px);left: 24%;width: 4%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-4">OTOMATİK VİTES</div>
+
+          <!-- Marker 5 - SU TERAZİSİ -->
+          <div class="marker" style="top: 8%;left: 29.9%;" data-marker="5">5</div>
+          <div class="line line-horizontal" style="top: calc(8% - 2px);left: 25%;width: 4%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-5">SU TERAZİSİ</div>
+
+          <!-- Marker 6 - TEPE LAMBASI  -->
+          <div class="marker" style="top: 85%;left: 56.8%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 79.5%;left: calc(57.2% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-6">TEPE LAMBASI</div>
+
+          <!-- Marker 7 - SİREN -->
+          <div class="marker" style="top: 85%;left: 60.5%;" data-marker="7">7</div>
+          <div class="line line-vertical" style="top: 79.5%;left: calc(60.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-7">SİREN</div>
+
+          <!-- Marker 8 - ÖN PROJEKTÖR -->
+          <div class="marker" style="top: 84.9%;left: 64.3%;" data-marker="8">8</div>
+          <div class="line line-vertical" style="top: 79.5%;left: calc(64.2% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-8">ÖN PROJEKTÖR</div>
+
+          <!-- Marker 9 - TEPE LAMBASI AKTİF IŞIKLARI -->
+          <div class="marker" style="top: 64%;left: 78%;" data-marker="9">9</div>
+          <div class="line line-vertical" style="top: 65.5%;left: calc(83.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-9" style="left: 561.5px; top: 469.521px;">TEPE LAMBASI AKTİF IŞIKLARI</div>
+
+          <!-- Marker 10 - PANJUR UYARI LAMBASI  -->
+          <div class="marker" style="top: 64%;left: 83.5%;" data-marker="10">10</div>
+          <div class="line line-vertical" style="top: 74.5%;left: calc(87% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-10">PANJUR UYARI LAMBASI</div>
+
+          <!-- Marker 11 - P.T.O DEVREDE IŞIĞI -->
+          <div class="marker" style="top: 82%;left: 87%;" data-marker="11">11</div>
+          <div class="line line-vertical" style="top: 65.5%;left: calc(78% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-11" style="left: 596.8px; top: 388.438px;">P.T.O DEVREDE IŞIĞI</div>
+
+          <!-- Marker 12 - SERVİS UZAKTAN BAĞLANTI -->
+          <div class="marker" style="top: 82%;left: 92.8%;" data-marker="12">12</div>
+          <div class="line line-vertical" style="top: 76.5%;left: calc(92.8% - 2px);height: 6.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-12">SERVİS UZAKTAN BAĞLANTI</div>
+
+          <!-- Marker 13 - WEBASTO -->
+          <div class="marker" style="top: 56%;left: 93%;" data-marker="13">13</div>
+          <div class="line line-horizontal" style="top: calc(25% - 2px);left: 18%;width: 4%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-13">WEBASTO</div>
+
+          <!-- Marker 14 - POMPA ÇALIŞMA SAATİ -->
+          <div class="marker" style="top: 56%;left: 85.5%;" data-marker="14">14</div>
+          <div class="line line-vertical" style="top: 49.5%;left: calc(85.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-14">POMPA ÇALIŞMA SAATİ</div>
+
+          <!-- Marker 15 - P.T.O -->
+          <div class="marker" style="top: 32%;left: 86.5%;" data-marker="15">15</div>
+          <div class="line line-vertical" style="top: 25.5%;left: calc(86.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="arac-ici-tooltip-15">P.T.O</div>
+
+        </div>
+
+        <div class="info-panel">
+          <h3>ARAÇ İÇİ FONKSİYONLAR</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">EL FRENİ (İMDAT) ÇEKİLMEDİĞİ SÜRECE P.T.O DEVREYE GİRMEZ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">İKİ TEKERİN AYNI HIZDA DÖNMESİNE ZORLAYARAK BATMIŞ OLAN BİR LASTİĞİ KALDIĞI YERDEN KURTARIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">EĞİMLİ ARAZİLERDE ARAÇ KUPASI YOKUŞ AŞAĞI GELDİĞİ DURUMLARDA ÖN DİSK FRENLERİ KESİNLİKLE AKTİF EDİLMELİDİR AKSİ HALDE P.T.O DEVREYE GİRMEYECEKTİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">(R) GERİ (N) BOŞ (D) İLERİ VİTESLERDİR P.T.O. DEVREYE ALMAK İÇİN KESİNLİKLE VİTE BOŞ (N) KONUMUNA ALINMALIDIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">EĞİMLİ ARAZİLERDE ARACIN SAĞ SOL AYAKLARI %10 DERECE AÇININ ÜZERİNE ÇIKTIĞI ZAMAN ÜST YAPI AÇILMAYACAKTIR. ARACIN O ANKİ KONUMU SU TERAZİSİ ÜZERİNDEN TAKİP EDİLİP 10 DERECE EĞİMİN ALTINDA AÇILMALIDIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">ARAÇ GÖREVLİ OLDUĞU SÜRECE TEPE LAMBASINI AÇMAK ZORUNDADIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">7</div>
+            <div class="info-text">YALNIZCA GEÇİŞ ÜSTÜNLÜĞÜ KULLANILCAĞI ZAMAN TEPE LAMBASI VE SİREN AYNI ANDA AÇILMAK ZORUNDADIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">8</div>
+            <div class="info-text">ARAÇ ÖNÜNDE BULUNAN PROJEKTÖRÜ YAKAR PROJEKTÖRÜN YANMASI İÇİN ARAÇ FARLARININ AÇIK OLMASI GEREKMEKTEDİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">9</div>
+            <div class="info-text">TEPE LAMBASININ AÇIK OLDUĞUNU İFADE EDER.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">10</div>
+            <div class="info-text">DOLAP KAPAKLARININ (PANJUR) AÇIK OLDUĞUNU İFADE EDER.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">11</div>
+            <div class="info-text">P.T.O (POMPA) DEVREDE OLDUĞU ZAMAN YANAR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">12</div>
+            <div class="info-text">SERVİS UZAKTAN BAĞLANTI DÜĞMESİ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">13</div>
+            <div class="info-text">ARAÇ ÇALIŞMADAN MAZOT İLE KABİN İÇERİSİNİ ISITAN SİSTEM.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">14</div>
+            <div class="info-text">POMPANIN KAÇ SAAT ÇALIŞTIĞINI GÖSTERİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">15</div>
+            <div class="info-text">P.T.O DEVERE ALMA TUŞU. VİTESİ BOŞA (N) ALMADAN EL FRENİNİ (İMDAT) ÇEKMEDEN KESİNLİKLE DEVREYE GİRMEZ.</div>
+          </div>
+          </div>
+        </div>
+      </section></div>
+    
+
+    <!-- Destek Ayakları -->
+    <section id="ayak" class="tab-content">
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/ayak.jpg" alt="Destek Ayakları">
+          
+          <!-- Marker 1 - AYAK UYARI IŞIĞI -->
+          <div class="marker" style="top: 25%;left: 24.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 25%;left: calc(24.9% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="ayak-tooltip-1">AYAK UYARI IŞIĞI.</div>
+
+          <!-- Marker 2 - ÖN AYAK SEÇME BUTONU -->
+          <div class="marker" style="top: 36%;left: 78%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 36%;left: calc(78% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="ayak-tooltip-2">ÖN AYAK SEÇME BUTONU.</div>
+
+          <!-- Marker 3 - ARKA AYAK SEÇME BUTONU -->
+          <div class="marker" style="top: 80%;left: 79%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 75%;left: calc(79% - 2px);height: 6%;"></div>
+          <div class="tooltip" id="ayak-tooltip-3">ARKA AYAK SEÇME BUTONU.</div>
+
+          <!-- Marker 4 - OTOMATİK TOPLAMA -->
+          <div class="marker" style="top: 92%;left: 59%;" data-marker="4">4</div>
+          <div class="line line-vertical" style="top: 87%;left: calc(59% - 2px);height: 6%;"></div>
+          <div class="tooltip" id="ayak-tooltip-4">OTOMATİK TOPLAMA.</div>
+
+          <!-- Marker 5 - OTOMATİK AÇMA -->
+          <div class="marker" style="top: 92%;left: 46%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 87%;left: calc(46% - 2px);height: 6%;"></div>
+          <div class="tooltip" id="ayak-tooltip-5">OTOMATİK AÇMA.</div>
+
+          <!-- Marker 6 - BOŞ OPSİYONEL -->
+          <div class="marker" style="top: 92%;left: 28%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 87%;left: calc(28% - 2px);height: 6%;"></div>
+          <div class="tooltip" id="ayak-tooltip-6">BOŞ OPSİYONEL.</div>
+
+          <!-- Marker 7 - SEPET TOPLAMA -->
+          <div class="marker" style="top: 92%;left: 19%;" data-marker="7">7</div>
+          <div class="line line-vertical" style="top: 86%;left: calc(19% - 2px);height: 6%;"></div>
+          <div class="tooltip" id="ayak-tooltip-7">SEPET TOPLAMA.</div>
+
+          <!-- Marker 8 - ACİL STOP -->
+          <div class="marker" style="top: 42%;left: 29%;" data-marker="8">8</div>
+          <div class="line line-vertical" style="top: 43%;left: calc(29% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="ayak-tooltip-8">ACİL STOP.</div>
+
+          <!-- Marker 9 - JOYSTİCK -->
+          <div class="marker" style="top: 58%;left: 71%;" data-marker="9">9</div>
+          <div class="line line-horizontal" style="top: calc(58% - 2px);left: 66%;width: 4%;"></div>
+          <div class="tooltip" id="ayak-tooltip-9">JOYİSTİK.</div>
+        </div>
+        <div class="info-panel">
+          <h3>DESTEK AYAKLARI FONKSİYONLARI</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">DESTEK AYAKLARININ NE DURUMDA OLDUĞUNU GÖSTERİR. IŞIK YANMIYORSA AYAKLAR TAMAMEN KAPALI DEMEKTİR. IŞIK YANIP SÖNÜYORSA AYAKLAR DENGELENMEMİŞTİR.IŞIK TAMAMEN YANIYORSA AYAKLAR DENGEDE DEMEKTİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">BUTONA BASILDIĞI ZAMAN ALTINDAKİ IŞIK SÖNER VE ÖN AYAKTAKİ HAREKET DEVRE DIŞI KALIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">BUTONA BASILDIĞI ZAMAN ALTINDAKİ IŞIK SÖNER VE ARKA AYAKTAKİ HAREKET DEVRE DIŞI KALIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">OTOMATİK TOPLAMA TUŞU. TUŞA BASILDIĞI SÜRECE ARAÇ 4 AYAĞINI BİRDEN TAMAMEN TOPLAR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">PANELİN BULUNDUĞU KONUMDAKİ ÖN VE ARKA AYAKLARI DÜĞMEYE BASILDIĞI SÜRECE OTOMATİK OLARAK SONUNA KADAR AÇAR VE DENGELER.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">BOŞ OPSİYONEL.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">7</div>
+            <div class="info-text">ARAÇ AÇILIRKEN YA DA KAPANIRKEN SEPET KENDİ KENDİNE AÇILIR/KAPANIR. BU DÜĞMEYE BASILMASI DURUMUNDA DÜĞMENİN ALTINDAKİ IŞIK SÖNER VE BU ÖZELLİK PASİF HALE GELİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">8</div>
+            <div class="info-text">AYAK PANELİNDEKİ ACİL STOP BUTONU MERDİVEN SETİ KALDIRILANA KADAR AKTİFTİR. MERDİVEN KALKTIKTAN SONRA HERHANGİ BİR İŞLEVİ YOKTUR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">9</div>
+            <div class="info-text">JOYSTİCK: MERDİVEN AYAKLARINI MANUEL OLARAK KULLANMAMIZI SAĞLAR. JOYİSTİĞE HANGİ HAREKETİ VERİRSEK AYAKLAR O YÖNDE HAREKET EDER. JOYİSTİĞİ AŞAĞI ÇEKERSENİZ ARAÇ AYAKLARI YERE BASAR YUKARI ÇEKERSENİZ AYAKLAR YUKARI KALKAR.</div>
+          </div>
+          </div>
+        </div>
+      
+    </section>
+
+    <!-- Operatör Ekranı Sayfa 1 -->
+    <section id="operator-1" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeOperatorPage('prev')" disabled="">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 1 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot active" onclick="showOperatorPage(1)"></button>
+          <button class="page-dot" onclick="showOperatorPage(2)"></button>
+          <button class="page-dot" onclick="showOperatorPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeOperatorPage('next')">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/opt1.png" alt="Operatör Ekranı Sayfa 1">
+          
+          <!-- Üst sıra marker'ları -->
+          <div class="marker" style="top: -1%;left: 8.2%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(8.2% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-1">YETERLİ YAĞ BASINCI VAR.</div>
+
+          <div class="marker" style="top: -1%;left: 17%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(17% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-2">TEK KİŞİLİK SINIR KALDI.</div>
+
+          <div class="marker" style="top: -1%;left: 26%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(26% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-3">SEPET YÜK SINIRI AŞILDI TOPLAMA YAPILMASI GERKİYOR.</div>
+
+          <div class="marker" style="top: -1%;left: 35%;" data-marker="4">4</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(35% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-4">KÖPRÜ SİSTEMİ AKTİF.</div>
+
+          <div class="marker" style="top: -1%;left: 45%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(45% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-5">AKÜ VOLTAJI.</div>
+
+          <div class="marker" style="top: -1%;left: 55%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(55% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-6">ÜST YAPI KAPLUMBAĞA MODUNDA.</div>
+
+          <div class="marker" style="top: -1%;left: 69%;" data-marker="7">7</div>
+          <div class="line line-vertical" style="top: 1%;left: calc(69% - 2px);height: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-7">SEPETTEKİ ADAM SAYISI.</div>
+
+          <!-- Sağ taraf marker'ları -->
+          <div class="marker" style="top: 23%;left: 83%;" data-marker="8">8</div>
+          <div class="line line-horizontal" style="top: calc(23% - 2px);left: 78%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-8" style="left: 648.5px; top: 192.352px;">SEPETİN BULUNDUĞU AKTİF KONUM</div>
+
+          <div class="marker" style="top: 41%;left: 83%;" data-marker="9">9</div>
+          <div class="line line-horizontal" style="top: calc(41% - 2px);left: 78%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-9">UYARI – ARIZA – BİLGİ EKRANI</div>
+
+          <div class="marker" style="top: 63%;left: 83%;" data-marker="10">10</div>
+          <div class="line line-horizontal" style="top: calc(63% - 2px);left: 78%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-10">AĞIRLIĞA GÖRE KALAN MESAFE</div>
+
+          <!-- Alt sıra marker'ları -->
+          <div class="marker" style="top: 92%;left: 73.9%;" data-marker="11">11</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(73.9% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-11">HIZ MODU SEÇİMİ</div>
+
+          <div class="marker" style="top: 92%;left: 64.7%;" data-marker="12">12</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(64.7% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-12">OTOMATİK TOPLAMA</div>
+
+          <div class="marker" style="top: 92%;left: 55.5%;" data-marker="13">13</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(55.5% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-13">EKRAN PARLAKLIK AYARI</div>
+
+          <div class="marker" style="top: 92%;left: 46.3%;" data-marker="14">14</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(46.3% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-14">19 NUMARALI EKRANI DEĞİŞTİRME</div>
+
+          <div class="marker" style="top: 92%;left: 36.7%;" data-marker="15">15</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(36.7% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-15">AYDINLATMA AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 92%;left: 27.6%;" data-marker="16">16</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(27.6% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-16">SEPET DİYAFON SESİ AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 92%;left: 18.4%;" data-marker="17">17</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(18.4% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-17">OPERATÖR KOLTUĞU DİYAFON SESİ AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 92%;left: 9.2%;" data-marker="18">18</div>
+          <div class="line line-vertical" style="top: 82%;left: calc(9.2% - 2px);height: 8%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-18">9 NOLU EKRANDAKİ YAZAN ARAÇ ARIZALARINI GÖRME / SAYFA DEĞİŞTİRME</div>
+
+          <!-- Sol taraf marker'ları -->
+          <div class="marker" style="top: 42%;left: 1%;" data-marker="19">19</div>
+          <div class="line line-horizontal" style="top: calc(42% - 2px);left: 2%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-19">ÜST YAPI KONUM EKRANI</div>
+
+          <div class="marker" style="top: 26%;left: 36%;" data-marker="20">20</div>
+          <div class="line line-horizontal" style="top: calc(26% - 2px);left: 37%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-20" style="left: 202px; top: 213.103px;">ÜST YAPININ MAKSİMUM GİDECEĞİ MESAFE</div>
+
+          <div class="marker" style="top: 10%;left: 102%;" data-marker="21">21</div>
+          <div class="line line-horizontal" style="top: calc(10% - 2px);left: 97%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-21" style="left: 202px; top: 213.103px;">DÖNER TABLA DENGELEME SENSÖRÜ</div>
+
+          <div class="marker" style="top: 29%;left: 102%;" data-marker="22">22</div>
+          <div class="line line-horizontal" style="top: calc(29% - 2px);left: 97%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-22" style="left: 202px; top: 213.103px;">BASAMAK HİZALAMA</div>
+
+          <div class="marker" style="top: 46%;left: 102%;" data-marker="23">23</div>
+          <div class="line line-horizontal" style="top: calc(46% - 2px);left: 97%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-23" style="left: 202px; top: 213.103px;">AYDINLATMA AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 66%;left: 102%;" data-marker="24">24</div>
+          <div class="line line-horizontal" style="top: calc(66% - 2px);left: 97%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-24" style="left: 202px; top: 213.103px;">ARAÇ MOTORU START/STOP</div>
+
+
+          <div class="marker" style="top: 91%;left: 102%;" data-marker="25">25</div>
+          <div class="line line-horizontal" style="top: calc(91% - 2px);left: 97%;width: 5%;"></div>
+          <div class="tooltip" id="operator-1-tooltip-25" style="left: 202px; top: 213.103px;">OPERATÖR EKRANI SAYFA DEĞİŞTİRME</div>
+        </div>
+
+
+<!-- Açıklamalar paneli -->
+      <div class="info-panel">
+        <h3>OPERATÖR EKRANI 1 AÇIKLAMALARI</h3>
+        <div class="info-item">
+          <div class="info-number">1</div>
+          <div class="info-text">ÜST YAPI İÇİN GEREKEN ÇALIŞMA BASINCININ OLDUĞUNU İFADE EDER. DEADMAN (GAZ) BASILDIĞI ZAMAN EKRANDA ÇIKAR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">2</div>
+          <div class="info-text">ÇALIŞMA ESNASINDA SEPETİN BULUNDUĞU KONUMDA KAÇ KİŞİLİK AĞIRLIK KAPASİTESİ KALDIĞINI İFADE EDER.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">3</div>
+          <div class="info-text">MERDİVEN SETİNİN AĞIRLIK SINIRININ AŞILDIĞINI ARTIK SADECE TOPLAMA YAPMAMIZ GERKTİĞİNİ İFADE EDER.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">4</div>
+          <div class="info-text">ÇOK SAYIDA İNSAN KURTARMAMIZ GEREKTİĞİ DURUMLARDA DAHA HIZLI TAHLİYE YAPABİLMEK ADINA KURMUŞ OLDUĞUMUZ KÖPRÜ SİSTEMİNİ İFADE EDER.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">5</div>
+          <div class="info-text">AKTİF AKÜ VOLTAJI.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">6</div>
+          <div class="info-text">ÜST YAPININ HANGİ HIZ MODUNDA ÇALIŞTIĞINI GÖSTERİR. 11 NOLU BUTONDAN MERDİVEN SETİNİN HIZININ DEĞİŞTİREBİLİRSİNİZ</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">7</div>
+          <div class="info-text">SEPETE YÜKLEYECEĞİNİZ AĞIRLIK MİKTARINI KİŞİ HESABI İLE SEÇEREK MERDİVEN SETİNİN MAKSİMUM LİMİTİNİ OTOMATİK OLARAK AYARLAR BU SİMGE SEÇMİŞ OLDUĞUNUZ KİŞİ LİMİTİNİ GÖSTERİR. MERDİVEN SETİNİ DAHA FAZLA İLERİ SÜRMEK İSTERSENİZ (SEPETTEKİ AĞIRLIĞI AZALTMAK ŞARTIYLA) ADAM EKSİLTME BUTONUNA BASARAK MERDİVEN SINIRLARINI GENİŞLETEBİLİRSİNİZ.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">8</div>
+          <div class="info-text">SEPETİN AKTİF OLARAK HANGİ KONUMDA OLDUĞUNU GÖSTERİR. (SEPETİN YERDEN YÜKSEKLİĞİ - ARAÇTAN UZAKLIĞI - BOM UZUNLUĞU)</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">9</div>
+          <div class="info-text">ÜST YAPI HAKKINDAKİ UYARI - ARIZA YADA BİLGİLERİ OKUYABİLECEĞİMİZ EKRAN 18 NUMARALI TUŞA BASILDIĞI ZAMAN BU EKRANDA AKTİF ARIZALAR GÖZÜKÜR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">10</div>
+          <div class="info-text">SEPETE BİNEN AĞIRLIK MİKTARINA GÖRE MERDİVEN SETİNİN KAÇ METRE DAHA GİDEBİLECEĞİNİ HESAPLAR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">11</div>
+          <div class="info-text">ÜST YAPININ HIZINI TAVŞAN (HIZLI) YADA KAPLUMBAĞA (YAVAŞ) AYARLAMANIZI SAĞLAR 6 NUMARALI SEMBOL ÜST YAPININ AKTİF OLAN HIZ MODUNU GÖSTERİR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">12</div>
+          <div class="info-text">OTOMATİK TOPLAMA TUŞU (GAZA BASILDIĞI SÜRECE AKTİFTİR. GAZI BIRAKIRSANIZ HAREKETİ KESER).</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">13</div>
+          <div class="info-text">EKRAN PARLAKLIĞINI AYARLAMANIZI SAĞLAYAN TUŞ.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">14</div>
+          <div class="info-text">19 NUMARALI ÜST YAPI KONUM EKRANINI DEĞİŞTİRİR. BU SAYDE ÜST YAPIYI 2D VEYA KUŞ BAKIŞI OLARAK HANGİ KONUMDA HANGİ AÇIDA OLDUĞUNU GÖREBİLİRİZ.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">15</div>
+          <div class="info-text">AYDINLATMALARI AÇAR/KAPATIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">16</div>
+          <div class="info-text">SEPET DİYAFON SESİNİ AÇAR/KAPATIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">17</div>
+          <div class="info-text">OPERATÖR KOLTUĞU DİYAFON SESİ AÇAR/KAPATIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">18</div>
+          <div class="info-text">BU TUŞ 9 NUMARALI EKRANI DEĞİŞTİREREK, ÜST YAPIDA OLUŞAN HERHANGİ BİR ARIZA, UYARI VEYA BİLGİ VARSA GÖRMEMİZİ SAĞLAR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">19</div>
+          <div class="info-text">MERDİVEN SETİNİN AKTİF KONUMU VE GİDEBİLECEĞİ MAKSİMUM SINIRLARI GÖSTERİR 14 NUMARALI TUŞA BASMANIZ SONUCUNDA ÜST YAPIYI 2D VEYA KUŞBAKIŞI OLARAK GÖREBİLİRSİNİZ.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">20</div>
+          <div class="info-text">MERDİVEN SETİNİN MAKSİMUM KAÇ METRE GİDEBİLECEĞİNİ HESAPLAR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">21</div>
+          <div class="info-text">DÖNER TABLA DENGELEMESİNİ İPTAL EDER. BU ÖZELLİK İPTAL EDİLMESİ DURUMUNDA DÖNER TABLA ZEMİN AÇISINA BAĞLI OLARAK YAMUK AÇILIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">22</div>
+          <div class="info-text">MERDİVENDEN ADAM İNDİRECEĞİMİZ ZAMAN MERDİVEN BASAMAKLARININ ARASININ BOŞ (EŞİT) OLMASI GEREKİYOR. BU TUŞA BASILMASI DURUMUNDA ARAÇ KENDİSİ BASAMAK ARALARINI EŞİTLEMEZ OPERATÖRÜN MERDİVEN SETİNİ ÜST YAPI HAREKETİ KESENE KADAR İLERİ YA DA GERİ SÜRMELİDİR. </div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">23</div>
+          <div class="info-text">MERDİVEN SETİ ÜZERİNDE BULUNAN AYDINLATMALARI AÇAR/KAPATIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">24</div>
+          <div class="info-text">ARAÇ MOTORU ÇALIŞIYORSA DURDURUR - ÇALIŞMIYORSA ÇALIŞTIRIR.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">25</div>
+          <div class="info-text">OPERATÖR EKRANINDA BULUNAN SAYFALAR ARASINDA GEÇİŞ YAPMAMIZI SAĞLAR.</div>
+        </div>
+        <div class="info-item">
+      </div>
+    
+  </div>
+</div>
+</section>
+
+    <!-- Operatör Ekranı Sayfa 2 -->
+    <section id="operator-2" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeOperatorPage('prev')">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 2 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot" onclick="showOperatorPage(1)"></button>
+          <button class="page-dot active" onclick="showOperatorPage(2)"></button>
+          <button class="page-dot" onclick="showOperatorPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeOperatorPage('next')">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/OPT. 2-2.jpg" alt="Operatör Ekranı Sayfa 2">
+          
+          <!-- Marker'lar -->
+          <div class="marker" style="top: 102%;left: 93.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 96.5%;left: calc(93.9% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-1">JENERATÖR TUŞU - JENERATÖR START STOP TUŞLARINA ERİŞMEK İÇİN BU TUŞA BASMANIZ GEREKİYOR</div>
+
+          <div class="marker" style="top: 102%;left: 80.7%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 96.5%;left: calc(80.7% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-2">VİNÇ MODU - ŞAKÜL MODU OLARAKDA ADLANDIRILIR</div>
+
+          <div class="marker" style="top: 102%;left: 68.5%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 96.5%;left: calc(68.5% - 2px);height: 5.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-3">RÜZGAR GÜLÜ</div>
+
+          <div class="marker" style="top: 102%;left: 43.5%;" data-marker="4">4</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(43.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-4">JENERATÖR STOP - 1 NOLU DÜĞMEYE BASMADIKÇA BU EKRAN AÇILMAZ!</div>
+
+          <div class="marker" style="top: 102%;left: 30.5%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(30.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-5">JENERATÖR START - 1 NOLU DÜĞMEYE BASMADIKÇA BU EKRAN AÇILMAZ!</div>
+
+          <div class="marker" style="top: 102%;left: 5.5%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(5.5% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-2-tooltip-6">KAYIT TUŞU - MERDİVEN YAPMIŞ OLDUĞUNUZ HAREKETLERİ AYNI HIZINDA KAYIT EDER</div>
+        </div>
+        <div class="info-panel">
+          <h3>OPERATÖR EKRANI - SAYFA 2</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">JENERATÖR START STOP TUŞLARINA ERİŞMEK İÇİN BU TUŞA BASMANIZ GEREKİYOR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">ŞAKÜL MODU OLARAKDA ADLANDIRILIR. SEPET ALTINA HERHANGİBİR NESNE BAĞLANDIĞI ZAMAN SEPET EKSENİ HİÇ BOZULMADAN OLDUĞU KONUMDA DÜMDÜZ YUKARIYA YA DA AŞAĞIYA HAREKET EDER. GENELLİKLE KUYUDAN KURTARMA ESNASINDA KULLANILAN BİR ÖZELLİKTİR. KUYUDAN ÇIKARILAN KİŞİ KUYU DUVARLARINA ÇARPMADAN DÜMDÜZ ÇIKABİLSİN DİYE KULLANILIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">RÜZGAR GÜLÜNÜN ÖLÇMÜŞ OLDUĞU AKTİF RÜZGAR HIZINI GÖSTEREN İŞARETİ EKRANDA AKTİF EDER.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">JENERATÖR STOP - 1 NOLU DÜĞMEYE BASMADIKÇA BU EKRAN AÇILMAZ!</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">JENERATÖR START - 1 NOLU DÜĞMEYE BASMADIKÇA BU EKRAN AÇILMAZ!</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">KAYIT EKRANI - MERDİVEN HAREKETLERİNİZİ KAYIT EDER VE TEKRAR OYNATIR. KAYIT ESNASINDA YAPMIŞ OLDUĞUNUZ HAREKETLERİ AYNI HIZDA VE AYNI BEKLEME SÜRELERİNDE KAYIT EDER. OYNAT TUŞUNA BASTIĞINIZ ZAMAN SİZ DURDURANA KADAR SÜREKLİ OLARAK KAYITTAKİ HAREKETİ TEKRAR EDER.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Operatör Ekranı Sayfa 3 -->
+    <section id="operator-3" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeOperatorPage('prev')">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 3 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot" onclick="showOperatorPage(1)"></button>
+          <button class="page-dot" onclick="showOperatorPage(2)"></button>
+          <button class="page-dot active" onclick="showOperatorPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeOperatorPage('next')" disabled="">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/OPT. 3.PNG" alt="Operatör Ekranı Sayfa 3">
+          
+          <!-- Marker'lar -->
+          <div class="marker" style="top: 102%;left: 93.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(93.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-3-tooltip-1">SİSTEM DİLİ DEĞİŞTİRME</div>
+
+          <div class="marker" style="top: 102%;left: 29.9%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(29.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-3-tooltip-2">OPERATÖR EKRANI PARLAKLIK AYARLAMA</div>
+
+          <div class="marker" style="top: 102%;left: 16.9%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(16.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="operator-3-tooltip-3">KOLTUK ISITMA</div>
+
+          <div class="marker" style="top: 51%;left: -3.1%;" data-marker="4">4</div>
+          <div class="line line-horizontal" style="top: calc(51% - 2px);left: -2%;width: 5%;"></div>
+          <div class="tooltip" id="operator-3-tooltip-4">ÜST YAPI KONUM EKRANI SAYFA 2</div>
+        </div>
+        <div class="info-panel">
+          <h3>OPERATÖR EKRANI - SAYFA 3</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">SİSTEMİN DİLİNİ DEĞİŞTİRMEMİZE YARAYAN BUTON.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">EKRAN PARLAKLIĞINI AYARLAMANIZI SAĞLAYAN TUŞ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">OPERATÖR KOLTUĞUNDA BULUNAN KOLTUK ISITMALARIN AÇILIP / KAPANMASINI SAĞLAR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">MERDİVEN SETİNİN KUŞ BAKIŞI OLARAK KONUMUNU GÖSTERİR.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Sepet Ekranı Sayfa 1 -->
+    <section id="sepet-1" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeSepetPage('prev')" disabled="">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 1 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot active" onclick="showSepetPage(1)"></button>
+          <button class="page-dot" onclick="showSepetPage(2)"></button>
+          <button class="page-dot" onclick="showSepetPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeSepetPage('next')">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/spt1.png" alt="Sepet Ekranı Sayfa 1">
+          
+          <!-- Üst marker'lar -->
+          <div class="marker" style="top: -1%;left: 11.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: -1%;left: calc(11.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-1">ARAÇ MOTORUNUN ÇALIŞMADIĞINI İFADE EDER</div>
+
+          <div class="marker" style="top: -1%;left: 37.9%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: -1%;left: calc(37.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-2">ÜST YAPI HIZLI (TAVŞAN) MODUNDA</div>
+
+          <div class="marker" style="top: -1%;left: 73.9%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: -1%;left: calc(73.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-3">SEPETE YÜKLENEBİLECEK AĞIRLIK ORANI</div>
+
+          <!-- Sağ marker -->
+          <div class="marker" style="top: 50%;left: 101%;" data-marker="4">4</div>
+          <div class="line line-horizontal" style="top: calc(50% - 2px);left: 96%;width: 5%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-4" style="left: 166px; top: 159.275px;">SEPET AĞIRLIK-MESAFE HESAPLAYICI</div>
+
+          <!-- Alt marker'lar -->
+          <div class="marker" style="top: 102%;left: 88.9%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(88.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-5">HIZ MODLARI ARASINDA GEÇİŞ YAPMA</div>
+
+          <div class="marker" style="top: 102%;left: 62.9%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(62.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-6">OTOMATİK TOPLAMA</div>
+
+          <div class="marker" style="top: 102%;left: 37.9%;" data-marker="7">7</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(37.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-7">ARAÇ BY-PASS</div>
+
+          <div class="marker" style="top: 102%;left: 11.9%;" data-marker="8">8</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(11.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-1-tooltip-8">4 NUMARA OLARAK İŞARETLİ OLAN SAYFAYI DEĞİŞTİRİR</div>
+        </div>
+        <div class="info-panel">
+          <h3>SEPET EKRANI - SAYFA 1</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">ARAÇ MOTORUNUN ÇALIŞMADIĞINI İFADE EDER.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">ÜST YAPININ HANGİ HIZ MODUNDA ÇALIŞTIĞININ GÖSTERİR TAVŞAN (HIZLI), KAPLUMBAĞA (YAVAŞ).</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">SEPETE YÜKLEYECEĞİNİZ AĞIRLIK MİKTARINI KİŞİ HESABI İLE SEÇEREK MERDİVEN SETİNİN MAKSİMUM LİMİTİNİ OTOMATİK OLARAK AYARLAR BU SİMGE SEÇMİŞ OLDUĞUNUZ KİŞİ LİMİTİNİ GÖSTERİR. MERDİVEN SETİNİ DAHA FAZLA İLERİ SÜRMEK İSTERSENİZ (SEPETTEKİ AĞIRLIĞI AZALTMAK ŞARTIYLA) ADAM EKSİLTME BUTONUNA BASARAK MERDİVEN SINIRLARINI GENİŞLETEBİLİRSİNİZ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">SEPET AĞIRLIK-MESAFE HESAPLAYICI - SEPETTEKİ AĞIRLIĞA GÖRE KALAN MESAFE.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">HIZ MODLARI ARASINDA GEÇİŞ YAPMA - TAVŞAN (HIZLI) / KAPLUMBAĞA (YAVAŞ) MOD.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">OTOMATİK TOPLAMA TUŞU (GAZA BASILDIĞI SÜRECE AKTİFTİR. GAZI BIRAKIRSANIZ HAREKETİ KESER)..</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">7</div>
+            <div class="info-text">ARAÇ BYPASS YANLIZCA ACİL DURUMLARDA KULLANILMALIDIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">8</div>
+            <div class="info-text">4 NUMARALI EKRANI DEĞİŞTİREREK AĞIRLIK - MESAFE ORANINI GÖSTEREN EKRAN YA DA MERDİVENİN MEVCUT KONUMU - MAKSİMUM MESAFESİNİ GÖSTEREN EKRANLAR ARASINDA BU TUŞA BASARAK GEÇİŞ YAPABİLİRİZ.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sepet Ekranı Sayfa 2 -->
+    <section id="sepet-2" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeSepetPage('prev')">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 2 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot" onclick="showSepetPage(1)"></button>
+          <button class="page-dot active" onclick="showSepetPage(2)"></button>
+          <button class="page-dot" onclick="showSepetPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeSepetPage('next')">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/spt2.png" alt="Sepet Ekranı Sayfa 2">
+          
+          <!-- Üst marker'lar -->
+          <div class="marker" style="top: -1%;left: 11.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: 0%;left: calc(11.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-1">AKÜ VOLTAJI</div>
+
+          <div class="marker" style="top: -1%;left: 37.9%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: 0%;left: calc(37.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-2">ÜST YAPI YAVAŞ (KAPLUMBAĞA) MODUNDA OLDUĞUNU GÖSTERİR</div>
+
+          <div class="marker" style="top: -1%;left: 73.9%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 0%;left: calc(73.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-3">SEPETE YÜKLENEBİLECEK AĞIRLIK ORANI</div>
+
+          <!-- Sağ marker -->
+          <div class="marker" style="top: 50%;left: 103.9%;" data-marker="4">4</div>
+          <div class="line line-horizontal" style="top: calc(50% - 2px);left: 99%;width: 4.9%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-4" style="left: 847.047px; top: 459.299px;">SEPETİN BULUNDUĞU AKTİF KONUM</div>
+
+          <!-- Alt marker'lar -->
+          <div class="marker" style="top: 102%;left: 88.9%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(88.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-5">AYDINLATMA</div>
+
+          <div class="marker" style="top: 102%;left: 62.9%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(62.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-6">SEPET DİYAFON SESİ AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 102%;left: 37.9%;" data-marker="7">7</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(37.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-7">OPERATÖR KOLTUĞU DİYAFON SESİ AÇMA/KAPATMA</div>
+
+          <div class="marker" style="top: 102%;left: 11.9%;" data-marker="8">8</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(11.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-8">ARAÇ ARIZA BİLDİRİM EKRANI AÇMA</div>
+
+          <!-- Sol marker -->
+          <div class="marker" style="top: 50%;left: 0%;" data-marker="9">9</div>
+          <div class="line line-horizontal" style="top: calc(50% - 2px);left: 0%;width: 5%;"></div>
+          <div class="tooltip" id="sepet-2-tooltip-9">ÜST YAPININ MAKSİMUM GİDEBİLECEĞİ MESAFE</div>
+        </div>
+        <div class="info-panel">
+          <h3>SEPET EKRANI - SAYFA 2</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">AKÜ VOLTAJI - AKTİF AKÜ VOLTAJ DEĞERİ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">ÜST YAPININ HANGİ HIZ MODUNDA ÇALIŞTIĞINI GÖSTERİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">SEPETE YÜKLEYECEĞİNİZ AĞIRLIK MİKTARINI KİŞİ HESABI İLE SEÇEREK MERDİVEN SETİNİN MAKSİMUM LİMİTİNİ OTOMATİK OLARAK AYARLAR BU SİMGE SEÇMİŞ OLDUĞUNUZ KİŞİ LİMİTİNİ GÖSTERİR. MERDİVEN SETİNİ DAHA FAZLA İLERİ SÜRMEK İSTERSENİZ (SEPETTEKİ AĞIRLIĞI AZALTMAK ŞARTIYLA) ADAM EKSİLTME BUTONUNA BASARAK MERDİVEN SINIRLARINI GENİŞLETEBİLİRSİNİZ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">SEPETİN AKTİF OLARAK HANGİ KONUMDA OLDUĞUNU GÖSTERİR. (SEPETİN YERDEN YÜKSEKLİĞİ - ARAÇTAN UZAKLIĞI - BOM UZUNLUĞU).</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">AYDINLATMA - MERDİVEN SETİ ÜZERİNDEKİ AYDINLATMALARI AÇAR/KAPATIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">SEPET DİYAFON - SEPET DİYAFON SESİNİ AÇAR/KAPATIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">7</div>
+            <div class="info-text">OPERATÖR KOLTUĞU DİYAFON - OPERATÖR KOLTUĞU DİYAFON SESİNİ AÇAR/KAPATIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">8</div>
+            <div class="info-text">BU TUŞ ÜST YAPIDA OLUŞAN HERHANGİ BİR ARIZA, UYARI VEYA BİLGİ VARSA GÖRMEMİZİ SAĞLAR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">9</div>
+            <div class="info-text">ÜST YAPININ MAKSİMUM GİDEBİLECEĞİ MESAFEYİ METRE OLARAK GÖSTERİR.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sepet Ekranı Sayfa 3 -->
+    <section id="sepet-3" class="tab-content">
+      <div class="content-page-nav">
+        <button class="page-nav-btn prev" onclick="changeSepetPage('prev')">
+          <span>←</span>
+          <span>Önceki</span>
+        </button>
+        <div class="page-indicator">Sayfa 3 / 3</div>
+        <div class="page-dots">
+          <button class="page-dot" onclick="showSepetPage(1)"></button>
+          <button class="page-dot" onclick="showSepetPage(2)"></button>
+          <button class="page-dot active" onclick="showSepetPage(3)"></button>
+        </div>
+        <button class="page-nav-btn next" onclick="changeSepetPage('next')" disabled="">
+          <span>Sonraki</span>
+          <span>→</span>
+        </button>
+      </div>
+      
+      <div class="interactive-container">
+        <div class="interactive-wrapper">
+          <img src="img/spt3.png" alt="Sepet Ekranı Sayfa 3">
+          
+          <!-- Üst marker'lar -->
+          <div class="marker" style="top: -1%;left: 11.9%;" data-marker="1">1</div>
+          <div class="line line-vertical" style="top: -1%;left: calc(11.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-1">AKÜ VOLTAJI</div>
+
+          <div class="marker" style="top: -1%;left: 37.9%;" data-marker="2">2</div>
+          <div class="line line-vertical" style="top: -1%;left: calc(37.9% - 2px);height: 4%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-2">RÜZGAR HIZI</div>
+
+          <!-- Alt marker'lar -->
+          <div class="marker" style="top: 102%;left: 88.9%;" data-marker="3">3</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(88.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-3" style="left: 704.547px; top: 902.83px;">RÜZGAR HIZI GÖRME</div>
+
+          <div class="marker" style="top: 102%;left: 62.9%;" data-marker="4">4</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(62.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-4">JENERATÖR</div>
+
+          <div class="marker" style="top: 102%;left: 37.9%;" data-marker="5">5</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(37.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-5">VİNÇ MODU</div>
+
+          <div class="marker" style="top: 102%;left: 11.9%;" data-marker="6">6</div>
+          <div class="line line-vertical" style="top: 97.5%;left: calc(11.9% - 2px);height: 4.5%;"></div>
+          <div class="tooltip" id="sepet-3-tooltip-6">HAREKET KAYIT ETME</div>
+        </div>
+        <div class="info-panel">
+          <h3>SEPET EKRANI - SAYFA 3</h3>
+          <div class="info-item">
+            <div class="info-number">1</div>
+            <div class="info-text">AKÜ VOLTAJI - AKTİF AKÜ VOLTAJ DEĞERİ.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">2</div>
+            <div class="info-text">RÜZGAR GÜLÜNÜN ÖLÇMÜŞ OLDUĞU AKTİF RÜZGAR HIZINI GÖSTERİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">3</div>
+            <div class="info-text">RÜZGAR GÜLÜNÜN ÖLÇMÜŞ OLDUĞU AKTİF RÜZGAR HIZINI EKRAN ÜZERİNDE GÖRMEMİZİ SAĞLAR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">4</div>
+            <div class="info-text">JENERATÖRÜ ÇALIŞTIRMAYA YA DA KAPATMAYA OLANAK SAĞLAYAN BUTONLARI GÖSTERİR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">5</div>
+            <div class="info-text">ŞAKÜL MODU OLARAKDA ADLANDIRILIR. SEPET ALTINA HERHANGİBİR NESNE BAĞLANDIĞI ZAMAN SEPET EKSENİ HİÇ BOZULMADAN OLDUĞU KONUMDA DÜMDÜZ YUKARIYA YA DA AŞAĞIYA HAREKET EDER. GENELLİKLE KUYUDAN KURTARMA ESNASINDA KULLANILAN BİR ÖZELLİKTİR. KUYUDAN ÇIKARILAN KİŞİ KUYU DUVARLARINA ÇARPMADAN DÜMDÜZ ÇIKABİLSİN DİYE KULLANILIR.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-number">6</div>
+            <div class="info-text">KAYIT EKRANI - MERDİVEN HAREKETLERİNİZİ KAYIT EDER VE TEKRAR OYNATIR. KAYIT ESNASINDA YAPMIŞ OLDUĞUNUZ HAREKETLERİ AYNI HIZDA VE AYNI BEKLEME SÜRELERİNDE KAYIT EDER. OYNAT TUŞUNA BASTIĞINIZ ZAMAN SİZ DURDURANA KADAR SÜREKLİ OLARAK KAYITTAKİ HAREKETİ TEKRAR EDER.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+
+  <script>
+    // Ana değişkenler
+    const navButtons = document.querySelectorAll('.nav-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navContainer = document.getElementById('navContainer');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    // Aktif sekme ve sayfa takibi
+    let currentTab = 'giris';
+    let operatorPage = 1;
+    let sepetPage = 1;
+
+    // Ana navigasyon
+    navButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabName = button.dataset.tab;
+        const hasPages = button.dataset.hasPages === 'true';
+        
+        // Aktif buton ayarla
+        navButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Alt navigasyonları gizle
+        document.querySelectorAll('.sub-nav').forEach(nav => nav.classList.remove('active'));
+        
+        // İçeriği göster
+        if (hasPages) {
+          if (tabName === 'operator') {
+            currentTab = 'operator';
+            showOperatorPage(operatorPage);
+            // Masaüstü için alt navigasyonu göster
+            if (window.innerWidth > 768) {
+              document.getElementById('operator-subnav').classList.add('active');
+            }
+          } else if (tabName === 'sepet') {
+            currentTab = 'sepet';
+            showSepetPage(sepetPage);
+            // Masaüstü için alt navigasyonu göster
+            if (window.innerWidth > 768) {
+              document.getElementById('sepet-subnav').classList.add('active');
+            }
+          }
+        } else {
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.getElementById(tabName).classList.add('active');
+          currentTab = tabName;
+        }
+        
+        // Mobil menüyü kapat
+        if (window.innerWidth <= 768) {
+          closeMobileMenu();
+        }
+      });
+    });
+
+    // Operatör sayfaları
+    function showOperatorPage(page) {
+      tabContents.forEach(content => content.classList.remove('active'));
+      document.getElementById(`operator-${page}`).classList.add('active');
+      
+      // Masaüstü navigasyon güncellemeleri
+      const currentSpan = document.getElementById('operator-current');
+      if (currentSpan) currentSpan.textContent = page;
+      
+      const operatorDots = document.querySelectorAll('#operator-subnav .page-dot');
+      operatorDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index + 1 === page);
+      });
+      
+      // Masaüstü buton durumları
+      const operatorPrev = document.querySelector('#operator-subnav .prev');
+      const operatorNext = document.querySelector('#operator-subnav .next');
+      if (operatorPrev) operatorPrev.disabled = page === 1;
+      if (operatorNext) operatorNext.disabled = page === 3;
+      
+      operatorPage = page;
+    }
+
+    // Sepet sayfaları
+    function showSepetPage(page) {
+      tabContents.forEach(content => content.classList.remove('active'));
+      document.getElementById(`sepet-${page}`).classList.add('active');
+      
+      // Masaüstü navigasyon güncellemeleri
+      const currentSpan = document.getElementById('sepet-current');
+      if (currentSpan) currentSpan.textContent = page;
+      
+      const sepetDots = document.querySelectorAll('#sepet-subnav .page-dot');
+      sepetDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index + 1 === page);
+      });
+      
+      // Masaüstü buton durumları
+      const sepetPrev = document.querySelector('#sepet-subnav .prev');
+      const sepetNext = document.querySelector('#sepet-subnav .next');
+      if (sepetPrev) sepetPrev.disabled = page === 1;
+      if (sepetNext) sepetNext.disabled = page === 3;
+      
+      sepetPage = page;
+    }
+
+    // Mobil için sayfa değiştirme fonksiyonları
+    function changeOperatorPage(direction) {
+      if (direction === 'prev' && operatorPage > 1) {
+        showOperatorPage(operatorPage - 1);
+      } else if (direction === 'next' && operatorPage < 3) {
+        showOperatorPage(operatorPage + 1);
+      }
+    }
+
+    function changeSepetPage(direction) {
+      if (direction === 'prev' && sepetPage > 1) {
+        showSepetPage(sepetPage - 1);
+      } else if (direction === 'next' && sepetPage < 3) {
+        showSepetPage(sepetPage + 1);
+      }
+    }
+
+    // Masaüstü Operatör alt navigasyon
+    document.querySelectorAll('#operator-subnav .page-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.direction === 'prev' && operatorPage > 1) {
+          showOperatorPage(operatorPage - 1);
+        } else if (btn.dataset.direction === 'next' && operatorPage < 3) {
+          showOperatorPage(operatorPage + 1);
+        }
+      });
+    });
+
+    document.querySelectorAll('#operator-subnav .page-dot').forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showOperatorPage(index + 1);
+      });
+    });
+
+    // Masaüstü Sepet alt navigasyon
+    document.querySelectorAll('#sepet-subnav .page-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.direction === 'prev' && sepetPage > 1) {
+          showSepetPage(sepetPage - 1);
+        } else if (btn.dataset.direction === 'next' && sepetPage < 3) {
+          showSepetPage(sepetPage + 1);
+        }
+      });
+    });
+
+    document.querySelectorAll('#sepet-subnav .page-dot').forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showSepetPage(index + 1);
+      });
+    });
+
+    // Mobil menü
+    mobileMenuToggle.addEventListener('click', () => {
+      navContainer.classList.toggle('mobile-open');
+      mobileOverlay.classList.toggle('active');
+      mobileMenuToggle.textContent = navContainer.classList.contains('mobile-open') ? '✕' : '☰';
+    });
+
+    mobileOverlay.addEventListener('click', closeMobileMenu);
+
+    function closeMobileMenu() {
+      navContainer.classList.remove('mobile-open');
+      mobileOverlay.classList.remove('active');
+      mobileMenuToggle.textContent = '☰';
+    }
+
+    // Window fonksiyonları global scope'a ekle
+    window.showOperatorPage = showOperatorPage;
+    window.showSepetPage = showSepetPage;
+    window.changeOperatorPage = changeOperatorPage;
+    window.changeSepetPage = changeSepetPage;
+
+    // Tooltip sistemi
+    function initializeTooltips() {
+      const allMarkers = document.querySelectorAll('.marker');
+      let activeMarker = null;
+      let activeTooltip = null;
+
+      allMarkers.forEach(marker => {
+        marker.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          const activeSection = document.querySelector('.tab-content.active');
+          if (!activeSection) return;
+          
+          let sectionId = activeSection.id;
+          
+          const markerNumber = marker.textContent.trim();
+          const tooltipId = `${sectionId}-tooltip-${markerNumber}`;
+          const tooltip = document.getElementById(tooltipId);
+          
+          if (!tooltip) {
+            console.warn('Tooltip bulunamadı:', tooltipId);
+            return;
+          }
+          
+          // Eğer başka bir marker aktifse, onu kapat
+          if (activeMarker && activeMarker !== marker) {
+            activeMarker.classList.remove('active');
+            if (activeTooltip) {
+              activeTooltip.classList.remove('active');
+            }
+          }
+          
+          // Toggle current marker
+          if (marker.classList.contains('active')) {
+            marker.classList.remove('active');
+            tooltip.classList.remove('active');
+            activeMarker = null;
+            activeTooltip = null;
+          } else {
+            marker.classList.add('active');
+            tooltip.classList.add('active');
+            activeMarker = marker;
+            activeTooltip = tooltip;
+            positionTooltip(marker, tooltip);
+          }
+        });
+      });
+
+      function positionTooltip(marker, tooltip) {
+        const markerRect = marker.getBoundingClientRect();
+        const wrapper = marker.closest('.interactive-wrapper');
+        if (!wrapper) return;
+        
+        const wrapperRect = wrapper.getBoundingClientRect();
+        
+        const markerLeft = markerRect.left - wrapperRect.left;
+        const markerTop = markerRect.top - wrapperRect.top;
+        
+        // Tooltip'i marker'ın altına yerleştir
+        tooltip.style.left = markerLeft + (markerRect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+        tooltip.style.top = markerTop + markerRect.height + 15 + 'px';
+        
+        // Tooltip ekran dışına taşıyorsa düzelt
+        setTimeout(() => {
+          const tooltipRect = tooltip.getBoundingClientRect();
+          
+          if (tooltipRect.right > window.innerWidth - 10) {
+            tooltip.style.left = 'auto';
+            tooltip.style.right = '10px';
+          }
+          
+          if (tooltipRect.left < 10) {
+            tooltip.style.left = '10px';
+          }
+        }, 10);
+      }
+
+      // Sayfanın herhangi bir yerine tıklandığında tooltip'i kapat
+      document.addEventListener('click', (e) => {
+        if (activeMarker && !e.target.classList.contains('marker')) {
+          activeMarker.classList.remove('active');
+          if (activeTooltip) {
+            activeTooltip.classList.remove('active');
+          }
+          activeMarker = null;
+          activeTooltip = null;
+        }
+      });
+
+      // Pencere boyutu değiştiğinde tooltip pozisyonlarını güncelle
+      window.addEventListener('resize', () => {
+        if (activeMarker && activeTooltip) {
+          positionTooltip(activeMarker, activeTooltip);
+        }
+      });
+    }
+
+    // Başlangıç
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTooltips();
+    });
+  </script>
+
+
+</body></html>
